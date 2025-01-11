@@ -61,7 +61,7 @@ breedSelect.addEventListener('change', async (event) => {
     infoDump.innerHTML = "";
     const selectedBreedId = event.target.value;
 
-    const res = await fetch(`https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${selectedBreedId`);
+    const res = await fetch(`https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${selectedBreedId}`);
     const data = await res.json();
 
     for (const item of data) {
