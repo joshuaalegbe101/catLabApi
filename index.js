@@ -1,5 +1,8 @@
 import * as Carousel from "./Carousel.js";
 
+axios.defaults.baseURL = 'https://api.thecatapi.com/v1';
+axios.defaults.headers.common['x-api-key'] = ''
+
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
 // The information section div element.
@@ -18,10 +21,32 @@ const getFavouritesBtn = document.getElementById("getFavouritesBtn");
  * This function should execute immediately.
  */
 
+/*
 async function initialLoad() {
   try{
     const res = await fetch("https://api.thecatapi.com/v1/breeds");
     const data = await res.json();
+
+    //create option tags
+
+    for (const breed of data) {
+      const option = document.createElement('option');
+      option.setAttribute("value", breed.id)
+      option.textContent = breed.name;
+      breedSelect.append(option);
+    }
+
+  } catch(err) {
+    console.log(err);
+  }
+}
+
+initialLoad();
+*/
+async function initialLoad() {
+  try{
+    const res = await axios("/breeds");
+    const data = res.data;
 
     //create option tags
 
@@ -53,7 +78,7 @@ initialLoad();
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
 
-  
+/*  
 breedSelect.addEventListener('change', async (event) => {
 
   try {
@@ -74,13 +99,44 @@ breedSelect.addEventListener('change', async (event) => {
     const breedInfo = data[0].breeds[0];
     const infoElement = document.createElement("div");
     infoElement.innerHTML = `
-    <`;
+    <h2>${breedInfo.name}</h2>
+    <p>${breedInfo.description}</p>`;
     infoDump.append(infoElement);
   } catch (err) {
     console.error(err);
   }
 });
+*/
 
+breedSelect.addEventListener('change', async (event) => {
+
+  try {
+    Carousel.clear();
+    infoDump.innerHTML = "";
+    const selectedBreedId = event.target.value;
+
+    const res = await axios(`/images/search?limit=5&breed_ids=${selectedBreedId}&has_breeds=1`);
+    const data = await res.data
+
+    console.log(data);
+
+    for (const item of data) {
+      const newAddition = Carousel.createCarouselItem(item.url, "cat", item.id)
+      Carousel.appendCarousel(newAddition); 
+    }
+
+    Carousel.start(); 
+
+    const breedInfo = data[0].breeds[0];
+    const infoElement = document.createElement("div");
+    infoElement.innerHTML = `
+    <h2>${breedInfo.name}</h2>
+    <p>${breedInfo.description}</p>`;
+    infoDump.append(infoElement);
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 
 /**
