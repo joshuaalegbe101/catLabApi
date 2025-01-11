@@ -61,21 +61,20 @@ breedSelect.addEventListener('change', async (event) => {
     infoDump.innerHTML = "";
     const selectedBreedId = event.target.value;
 
-    const res = await fetch(`https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${selectedBreedId}`);
+    const res = await fetch(`https://api.thecatapi.com/v1/images/search?limit=5&breed_ids=${selectedBreedId}&has_breeds=1`);
     const data = await res.json();
 
     for (const item of data) {
-      const imgElement = document.createElement("img");
-      imgElement.src = item.url;
-      imgElement.alt = `Image of ${item.breeds[0].name}`;
-      Carousel.appendCarousel(imgElement); 
+      const newAddition = Carousel.createCarouselItem(item.url, "HI", item.id)
+      Carousel.appendCarousel(newAddition); 
     }
 
     Carousel.start(); 
 
     const breedInfo = data[0].breeds[0];
     const infoElement = document.createElement("div");
-    infoElement.innerHTML = `{breadInfo}`;
+    infoElement.innerHTML = `
+    <`;
     infoDump.append(infoElement);
   } catch (err) {
     console.error(err);
