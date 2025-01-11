@@ -10,7 +10,7 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "";
+const API_KEY = "live_yoRx64KO6KQRd8rQG1vwvNaUZp1mMVmcqMjBX1fK3qdbOgNDZmkSpek9OWmxHMa8";
 
 /**
  * 1. Create an async function "initialLoad" that does the following:
@@ -55,6 +55,37 @@ initialLoad();
  * - Each new selection should clear, re-populate, and restart the Carousel.
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
+
+  
+breedSelect.addEventListener('change', async (event) => {
+
+  try {
+    Carousel.clear();
+    infoDump.innerHTML = "";
+    const selectedBreedId = event.target.value;
+
+    const res = await fetch(`https://api.thecatapi.com/v1/images/search?breed_id=${selectedBreedId}&live_yoRx64KO6KQRd8rQG1vwvNaUZp1mMVmcqMjBX1fK3qdbOgNDZmkSpek9OWmxHMa8`);
+    const data = await res.json();
+
+    for (const item of data) {
+      const imgElement = document.createElement("img");
+      imgElement.src = item.url;
+      imgElement.alt = `Image of ${item.breeds[0].name}`;
+      Carousel.add(imgElement); 
+    }
+
+    Carousel.start(); 
+
+    const breedInfo = data[0].breeds[0];
+    const infoElement = document.createElement("div");
+    infoElement.innerHTML = `{breadInfo}`;
+    infoDump.append(infoElement);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
@@ -107,9 +138,9 @@ initialLoad();
  *   you delete that favourite using the API, giving this function "toggle" functionality.
  * - You can call this function by clicking on the heart at the top right of any image.
  */
-export async function favourite(imgId) {
+//export async function favourite(imgId) 
   // your code here
-}
+
 
 /**
  * 9. Test your favourite() function by creating a getFavourites() function.
