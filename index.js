@@ -9,9 +9,6 @@ const progressBar = document.getElementById("progressBar");
 // The get favourites button element.
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
-// Step 0: Store your API key here for reference and easy access.
-const API_KEY = "live_yoRx64KO6KQRd8rQG1vwvNaUZp1mMVmcqMjBX1fK3qdbOgNDZmkSpek9OWmxHMa8";
-
 /**
  * 1. Create an async function "initialLoad" that does the following:
  * - Retrieve a list of breeds from the cat API using fetch().
@@ -64,14 +61,14 @@ breedSelect.addEventListener('change', async (event) => {
     infoDump.innerHTML = "";
     const selectedBreedId = event.target.value;
 
-    const res = await fetch(`https://api.thecatapi.com/v1/images/search?breed_id=${selectedBreedId}&live_yoRx64KO6KQRd8rQG1vwvNaUZp1mMVmcqMjBX1fK3qdbOgNDZmkSpek9OWmxHMa8`);
+    const res = await fetch(`https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${selectedBreedId`);
     const data = await res.json();
 
     for (const item of data) {
       const imgElement = document.createElement("img");
       imgElement.src = item.url;
       imgElement.alt = `Image of ${item.breeds[0].name}`;
-      Carousel.add(imgElement); 
+      Carousel.appendCarousel(imgElement); 
     }
 
     Carousel.start(); 
