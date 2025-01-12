@@ -108,6 +108,26 @@ breedSelect.addEventListener('change', async (event) => {
 });
 */
 
+axios.interceptors.request.use((config) => {
+  config.metadata = { startTime: new Date() }; // Record start time
+  return config;
+});
+
+axios.interceptors.response.use((response) => {
+  const endTime = new Date();
+  const duration = endTime - response.config.metadata.startTime; 
+  console.log(`Request to ${response.config.url} took ${duration}ms`);
+  return response;
+}, (error) => {
+  if (error.config && error.config.metadata) {
+    const endTime = new Date();
+    const duration = endTime - error.config.metadata.startTime;
+    console.error(`Request to ${error.config.url} failed after ${duration}ms`);
+  }
+  return Promise.reject(error);
+});
+
+
 breedSelect.addEventListener('change', async (event) => {
 
   try {
